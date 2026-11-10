@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= movie.Title %> | Movie Explorer</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <a href="/" class="brand">Movie<span>Explorer</span></a>
+
+        <nav class="navigation">
+            <a href="/">Home</a>
+            <a href="/#search">Search</a>
+            <a href="/#about">About</a>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <a href="/" class="back-link">← Back to Movie Explorer</a>
+
+        <section class="movie-detail-layout">
+
+            <!-- Movie poster -->
+            <div class="detail-poster">
+
+                <% if (movie.Poster && movie.Poster !== "N/A") { %>
+
+                    <img
+                        src="<%= movie.Poster %>"
+                        alt="Poster for <%= movie.Title %>"
+                    >
+
+                <% } else { %>
+
+                    <div class="no-poster">
+                        Poster unavailable
+                    </div>
+
+                <% } %>
+
+            </div>
+
+            <!-- Movie information -->
+            <div class="detail-content">
+
+                <p class="eyebrow">MOVIE DETAILS</p>
+
+                <h1><%= movie.Title %></h1>
+
+                <div class="detail-tags">
+                    <span><%= movie.Year %></span>
+                    <span><%= movie.Rated %></span>
+                    <span><%= movie.Runtime %></span>
+                </div>
+
+                <p class="detail-genre">
+                    <%= movie.Genre %>
+                </p>
+
+                <div class="rating">
+                    <span>IMDb Rating</span>
+                    <strong>
+                        <%= movie.imdbRating !== "N/A"
+                            ? movie.imdbRating + "/10"
+                            : "Not available" %>
+                    </strong>
+                </div>
+
+                <div class="plot-section">
+                    <h2>Overview</h2>
+                    <p><%= movie.Plot %></p>
+                </div>
+
+                <div class="detail-information">
+
+                    <p>
+                        <strong>Director:</strong>
+                        <%= movie.Director !== "N/A"
+                            ? movie.Director
+                            : "Not available" %>
+                    </p>
+
+                    <p>
+                        <strong>Actors:</strong>
+                        <%= movie.Actors !== "N/A"
+                            ? movie.Actors
+                            : "Not available" %>
+                    </p>
+
+                    <p>
+                        <strong>Released:</strong>
+                        <%= movie.Released %>
+                    </p>
+
+                    <p>
+                        <strong>Language:</strong>
+                        <%= movie.Language %>
+                    </p>
+
+                    <p>
+                        <strong>Country:</strong>
+                        <%= movie.Country %>
+                    </p>
+
+                    <p>
+                        <strong>Writer:</strong>
+                        <%= movie.Writer %>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>Movie Explorer | Powered by the OMDb API</p>
+        <p>Discover movies. Explore stories.</p>
+    </footer>
+
+</body>
+</html>

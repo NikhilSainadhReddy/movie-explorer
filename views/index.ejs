@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Explorer</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+</head>
+<body>
+
+    <!-- Navigation bar -->
+    <header class="site-header">
+        <a href="/" class="brand">Movie<span>Explorer</span></a>
+
+        <nav class="navigation">
+            <a href="/">Home</a>
+            <a href="/#search">Search</a>
+            <a href="/#about">About</a>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <!-- Hero section and search form -->
+        <section class="hero" id="search">
+            <p class="eyebrow">YOUR MOVIE DISCOVERY STARTS HERE</p>
+
+            <h1>Find your next <span>favorite movie.</span></h1>
+
+            <p class="hero-description">
+                Discover movies and series, explore their details,
+                and find something worth watching.
+            </p>
+
+            <form action="/search" method="GET" class="search-form">
+
+                <div class="form-field title-field">
+                    <label for="title">Movie or series title</label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        placeholder="For example, Interstellar"
+                        value="<%= searchTerm || '' %>"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="year">Release year</label>
+                    <input
+                        type="number"
+                        id="year"
+                        name="year"
+                        placeholder="e.g. 2022"
+                        min="1870"
+                        max="<%= new Date().getFullYear() %>"
+                        value="<%= selectedYear || '' %>"
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="type">Content type</label>
+                    <select id="type" name="type">
+                        <option value="">All types</option>
+                        <option value="movie"
+                            <%= selectedType === "movie" ? "selected" : "" %>>
+                            Movie
+                        </option>
+                        <option value="series"
+                            <%= selectedType === "series" ? "selected" : "" %>>
+                            Series
+                        </option>
+                        <option value="episode"
+                            <%= selectedType === "episode" ? "selected" : "" %>>
+                            Episode
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit" class="search-button">
+                    Search Movies
+                </button>
+
+            </form>
+        </section>
+
+        <!-- Error message -->
+        <% if (error) { %>
+            <div class="alert" role="alert">
+                <strong>Something went wrong:</strong>
+                <%= error %>
+            </div>
+        <% } %>
+
+        <!-- Search results -->
+        <% if (movies && movies.length > 0) { %>
+
+            <section class="results-section">
+
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">SEARCH RESULTS</p>
+                        <h2>Results for "<%= searchTerm %>"</h2>
+                    </div>
+
+                    <p class="result-count">
+                        <%= movies.length %> movies on this page
+                    </p>
+                </div>
+
+                <div class="movie-grid">
+
+                    <% movies.forEach(movie => { %>
+
+                        <a
+                            href="/movie/<%= encodeURIComponent(movie.imdbID) %>"
+                            class="movie-card"
+                        >
+
+                            <div class="poster-container">
+
+                                <% if (movie.Poster && movie.Poster !== "N/A") { %>
+
+                                    <img
+                                        src="<%= movie.Poster %>"
+                                        alt="Poster for <%= movie.Title %>"
+                                        loading="lazy"
+                                    >
+
+                                <% } else { %>
+
+                                    <div class="no-poster">
+                                        Poster unavailable
+                                    </div>
+
+                                <% } %>
+
+                            </div>
+
+                            <div class="movie-card-content">
+                                <h3><%= movie.Title %></h3>
+
+                                <p>
+                                    <%= movie.Year %>
+                                    <span class="separator">•</span>
+                                    <%= movie.Type %>
+                                </p>
+                            </div>
+
+                        </a>
+
+                    <% }) %>
+
+                </div>
+
+                <!-- Pagination -->
+                <% if (totalPages > 1) { %>
+
+                    <div class="pagination">
+
+                        <% if (currentPage > 1) { %>
+
+                            <a href="/search?title=<%= encodeURIComponent(searchTerm) %>&year=<%= encodeURIComponent(selectedYear) %>&type=<%= encodeURIComponent(selectedType) %>&page=<%= currentPage - 1 %>">
+                                Previous
+                            </a>
+
+                        <% } %>
+
+                        <span>
+                            Page <%= currentPage %> of <%= totalPages %>
+                        </span>
+
+                        <% if (currentPage < totalPages) { %>
+
+                            <a href="/search?title=<%= encodeURIComponent(searchTerm) %>&year=<%= encodeURIComponent(selectedYear) %>&type=<%= encodeURIComponent(selectedType) %>&page=<%= currentPage + 1 %>">
+                                Next
+                            </a>
+
+                        <% } %>
+
+                    </div>
+
+                <% } %>
+
+            </section>
+
+        <!-- Search completed but no results -->
+        <% } else if (searchTerm && !error) { %>
+
+            <section class="message-panel">
+                <h2>No movies found</h2>
+                <p>
+                    We couldn't find results for
+                    "<%= searchTerm %>". Try another title.
+                </p>
+            </section>
+
+        <!-- Initial landing page -->
+        <% } else if (!searchTerm && !error) { %>
+
+            <section class="welcome-panel" id="about">
+                <p class="eyebrow">EXPLORE. DISCOVER. WATCH.</p>
+                <h2>Your next great movie is waiting.</h2>
+                <p>
+                    Search for a movie or series using the search box above.
+                    You can filter by release year and content type,
+                    then select a result to explore its details.
+                </p>
+            </section>
+
+        <% } %>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>Movie Explorer | Powered by the OMDb API</p>
+        <p>Discover movies. Explore stories.</p>
+    </footer>
+
+</body>
+</html>
